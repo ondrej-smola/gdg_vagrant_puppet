@@ -1,0 +1,15 @@
+<VirtualHost *:80>
+	
+	DocumentRoot <%= @application_home %>	
+	
+	<Directory />
+		DirectoryIndex <%= @application_name %>.html
+		Options FollowSymLinks
+		AllowOverride None
+	</Directory>
+
+	ErrorLog ${APACHE_LOG_DIR}/error.log	
+	LogLevel warn
+
+</VirtualHost>
+
