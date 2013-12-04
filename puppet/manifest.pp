@@ -1,10 +1,13 @@
 
+$application_name = 'app1'
 
-$application_name = 'app'
-$applications_root = '/usr/local/http'
+
+$applications_root = '/usr/local/applications'
+$apache_home = '/etc/apache2'
+
 $application_home = "$applications_root/$application_name"
-$apache_sites_available = '/etc/apache2/sites-available' 
-$apache_sites_enabled = '/etc/apache2/sites-enabled'
+$apache_sites_available = "$apache_home/sites-available" 
+$apache_sites_enabled = "$apache_home/sites-enabled"
 
 package{"apache2":
 	ensure => latest	
@@ -12,37 +15,39 @@ package{"apache2":
 
 service{"apache2":
 	ensure => running,
-	enable => true,					# registruje spuštění služby při spuštění OS
+	enable => true,					
 	require => Package["apache2"]  	
 }
 
+user { 'www-data':
+	ensure => present
+}
+->
 file{ $applications_root:
 	ensure => directory,	
 	mode	=> 755,
-	owner => 'www-data'
+	owner => 'www-data'	
 }
-
+->
 file{ $application_home:
 	ensure => directory,
 	recurse	=> true,
 	mode	=> 755,
 	owner => 'www-data',
-	source => "/vagrant/$application_name",
-	require	=> File[$applications_root],	
+	source => "/vagrant/$application_name"		
 }
 ->
 file{"$apache_sites_available":
- ensure => directory,
- recurse => true,
- purge => true
+	 ensure => directory,
+	 recurse => true,
+	 purge => true
 }
-
+->
 file{"$apache_sites_available/${application_name}":	
 	ensure => 'file',
 	owner => 'www-data',
 	mode => '755',	
-	content => template('/vagrant/puppet/templates/apache_instance.erb'),
-	require	=> File[$application_home]		
+	content => template('/vagrant/puppet/templates/apache_instance.erb')		
 }
 ->
 file{$apache_sites_enabled:
