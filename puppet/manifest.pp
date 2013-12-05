@@ -1,5 +1,5 @@
 
-$application_name = 'app2'
+$application_name = 'app1'
 
 $applications_root = '/usr/local/applications'
 $apache_home = '/etc/apache2'
