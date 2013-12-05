@@ -29,5 +29,16 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 	end		
   end
   
+  config.vm.define "backup" do |db|   
+  
+	db.vm.network :forwarded_port, guest: 22, host: 4208
+	db.vm.network :private_network, ip: "192.168.56.104"
+	db.vm.hostname = "slave2.example.com"
+	
+	db.vm.provider :virtualbox do |vb|  	
+		vb.name = "backup"					
+	end		
+  end
+  
 end
 
